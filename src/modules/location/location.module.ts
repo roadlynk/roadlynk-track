@@ -19,6 +19,10 @@ import {
   PushLocation,
   PushLocationSchema,
 } from '../../schemas/location/push-location.schema';
+import {
+  EicherRawPush,
+  EicherRawPushSchema,
+} from '../../schemas/location/eicher-raw-push.schema';
 
 @Module({
   imports: [
@@ -28,6 +32,7 @@ import {
     MongooseModule.forFeature([
       { name: PullLocation.name, schema: PullLocationSchema },
       { name: PushLocation.name, schema: PushLocationSchema },
+      { name: EicherRawPush.name, schema: EicherRawPushSchema },
     ]),
   ],
   controllers: [LocationController, EicherPushController],

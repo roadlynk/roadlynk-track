@@ -25,6 +25,24 @@ export class EicherPushService {
 		private readonly companyRepository: CompanyRepository,
 	) {}
 
+	async processRawPush(companyCode: string, payload: unknown) {
+		try {
+			const saved = await this.locationRepository.createRawEicherPush(
+				companyCode,
+				payload,
+			);
+			return {
+				status: true,
+				message: 'Raw location data received successfully',
+				id: saved._id,
+			};
+		} catch (error) {
+			const errorName = error instanceof Error ? error.name : 'UnknownError';
+			this.logger.error(`Eicher raw push persistence failed (${errorName})`);
+			throw new InternalServerErrorException('Unable to store raw Eicher data');
+		}
+	}
+
 	async processPush(companyCode: string, payload: EicherLocationPushDto) {
 		const company = await this.companyRepository.findByCompanyCode(companyCode);
 		if (!company) {
