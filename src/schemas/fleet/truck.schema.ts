@@ -1,0 +1,66 @@
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
+
+export enum Manufacturer {
+  MAHENDRA = 'MAHENDRA',
+  TATA = 'TATA',
+  EICHER = 'EICHER',
+  ASHOK_LEYLAND = 'ASHOK_LEYLAND',
+}
+
+export type TruckDocument = Truck & Document;
+
+@Schema({
+  timestamps: true,
+})
+export class Truck {
+  @Prop({
+    type: Types.ObjectId,
+    ref: 'Company',
+    required: true,
+    index: true,
+  })
+  companyId!: Types.ObjectId;
+
+  @Prop({
+    required: true,
+    trim: true,
+    uppercase: true,
+  })
+  truckNumber!: string;
+
+  @Prop({
+    required: true,
+    trim: true,
+    uppercase: true,
+  })
+  chasisNumber!: string;
+
+  @Prop({
+    required: true,
+    type: Number,
+  })
+  fuelTankCapacity!: number;
+  
+  @Prop({
+    type: String,
+    enum: Manufacturer,
+    required: true,
+  })
+  manufacturer!: Manufacturer;
+
+  @Prop({
+    required: true,
+    type: Number,
+  })
+  manufacturingYear!: number;
+
+  @Prop({
+    default: true,
+  })
+  isActive!: boolean;
+}
+
+export const TruckSchema = SchemaFactory.createForClass(Truck);
+TruckSchema.index({ companyId: 1, truckNumber: 1 }, { unique: true });
+TruckSchema.index({ companyId: 1, chasisNumber: 1 }, { unique: true });
